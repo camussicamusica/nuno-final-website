@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cards Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #0D1626;
+        font-family: 'Barlow', sans-serif;
+        padding: 60px 24px;
+        min-height: 100vh;
+    }
+
+    .learn-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .lc {
+        background: #213052;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 32px 28px;
+        min-height: 420px;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Hover border colors per card */
+    .lc[data-day="1"]:hover { border-color: rgba(255,191,0,0.5); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+    .lc[data-day="2"]:hover { border-color: rgba(60,131,246,0.5); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+    .lc[data-day="3"]:hover { border-color: rgba(57,255,20,0.5);  box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+
+    .day-num {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 3.5rem;
+        line-height: 1;
+        margin-bottom: -4px;
+        text-align: center;
+    }
+    .day-num-gold  { color: rgba(255,191,0,0.2); }
+    .day-num-blue  { color: rgba(60,131,246,0.2); }
+    .day-num-green { color: rgba(57,255,20,0.15); }
+
+    .day-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.72rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 1.6rem;
+        color: #F0F6FF;
+        line-height: 1.1;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .card-intro {
+        font-size: 0.92rem;
+        color: #94A3B8;
+        line-height: 1.6;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    /* IMAGE — hidden by default, shown when another card is hovered */
+    .card-img {
+        display: none;
+        width: 100%;
+        flex: 1;
+        object-fit: contain;
+        margin-top: 20px;
+        border-radius: 10px;
+        opacity: 0.9;
+    }
+
+    /* BULLETS — hidden by default, shown when THIS card is hovered */
+    .card-bullets {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+        list-style: none;
+        padding: 0;
+    }
+
+    .card-bullets li {
+        font-size: 0.88rem;
+        color: #94A3B8;
+        line-height: 1.55;
+        padding-left: 18px;
+        position: relative;
+        text-align: left;
+    }
+
+    .card-bullets li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        font-size: 0.8rem;
+    }
+
+    .bullet-gold::before  { color: #FFBF00; }
+    .bullet-blue::before  { color: #3C83F6; }
+    .bullet-green::before { color: #39FF14; }
+
+    /* STATE CLASSES applied by JS to the grid */
+    /* When grid has data-active="1": card 1 shows bullets, cards 2+3 show images */
+    .learn-grid[data-active="1"] .lc[data-day="1"] .card-bullets { display: flex; }
+    .learn-grid[data-active="1"] .lc[data-day="2"] .card-img    { display: block; }
+    .learn-grid[data-active="1"] .lc[data-day="3"] .card-img    { display: block; }
+
+    .learn-grid[data-active="2"] .lc[data-day="2"] .card-bullets { display: flex; }
+    .learn-grid[data-active="2"] .lc[data-day="1"] .card-img    { display: block; }
+    .learn-grid[data-active="2"] .lc[data-day="3"] .card-img    { display: block; }
+
+    .learn-grid[data-active="3"] .lc[data-day="3"] .card-bullets { display: flex; }
+    .learn-grid[data-active="3"] .lc[data-day="1"] .card-img    { display: block; }
+    .learn-grid[data-active="3"] .lc[data-day="2"] .card-img    { display: block; }
+</style>
+</head>
+<body>
+
+<div class="learn-grid" id="learnGrid">
+
+    <!-- CARD 1 -->
+    <div class="lc" data-day="1">
+        <p class="day-num day-num-gold">01</p>
+        <p class="day-label" style="color:#FFBF00;">Day 1 — The Architect's Blueprint</p>
+        <h3 class="card-title">Agent Architecture 101</h3>
+        <p class="card-intro">Map your business logic into AI and eliminate expensive developers forever.</p>
+        <img src="./s1.png" alt="" class="card-img">
+        <ul class="card-bullets">
+            <li class="bullet-gold">Discover how to map 25 years of business logic directly into an AI — no $500/day developer needed.</li>
+            <li class="bullet-blue">Configure your MCP environment click-by-click to permanently kill terminal fear and guarantee zero setup lag.</li>
+            <li class="bullet-gold">Create a CLAUDE.md playbook so your AI team permanently remembers your brand standards — forever.</li>
+        </ul>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="lc" data-day="2">
+        <p class="day-num day-num-blue">02</p>
+        <p class="day-label" style="color:#3C83F6;">Day 2 — The 15-Minute Blitz</p>
+        <h3 class="card-title">Your Lead Pipeline Agent</h3>
+        <p class="card-intro">Deploy a custom AI Employee that researches and qualifies leads while you sleep.</p>
+        <img src="./s2.png" alt="" class="card-img">
+        <ul class="card-bullets">
+            <li class="bullet-gold">Watch a Lead Research Agent get built live — proving you have every technical skill needed to direct an AI workforce.</li>
+            <li class="bullet-blue">Escape Starter Hell using the 120-Minute Deployment Framework to build, deploy and post a live URL before the session ends.</li>
+            <li class="bullet-gold">Walk away as an Architect owning infrastructure that puts you 10x ahead of competitors stuck in manual mode.</li>
+        </ul>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="lc" data-day="3">
+        <p class="day-num day-num-green">03</p>
+        <p class="day-label" style="color:#39FF14;">Day 3 — The Permanent AI Workforce</p>
+        <h3 class="card-title">Scale to $0.67/Day</h3>
+        <p class="card-intro">Wire your agent into GHL so leads flow, pipelines update and follow-ups fire automatically.</p>
+        <img src="./s3.png" alt="" class="card-img">
+        <ul class="card-bullets">
+            <li class="bullet-gold">Plug your AI team directly into GoHighLevel so leads and pipelines run on autopilot while you focus on high-value work.</li>
+            <li class="bullet-blue">Wire your weekend project into a fully connected business system that qualifies prospects and fires follow-ups while you sleep.</li>
+            <li class="bullet-green">Go from dependent on experts you can't afford to completely self-sufficient with an automated workforce at $0.67/day.</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+(function() {
+    var grid  = document.getElementById('learnGrid');
+    var cards = document.querySelectorAll('.lc');
+
+    cards.forEach(function(card) {
+        card.addEventListener('mouseenter', function() {
+            grid.setAttribute('data-active', card.getAttribute('data-day'));
+        });
+        card.addEventListener('mouseleave', function() {
+            grid.removeAttribute('data-active');
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

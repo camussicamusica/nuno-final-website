@@ -1,0 +1,2821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manus AI Workshop | Nuno Tavares — Free 3-Day Live Webinar</title>
+    <meta name="description" content="Build your first AI Agent in a FREE 3-day hands-on workshop with Nuno Tavares. No code. No developers. Just results.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           DESIGN TOKENS
+        ===================================================== */
+        :root {
+            --bg-primary:       #0D1626;
+            --bg-secondary:     #0F1A2E;
+            --bg-card:          #111E35;
+
+            --card-surface:     #FFFFFF;
+            --card-surface-alt: #F4F7FF;
+            --glass-bg:         rgba(255, 255, 255, 0.97);
+            --glass-border:     rgba(60, 131, 246, 0.15);
+
+            --accent-blue:      #3C83F6;
+            --accent-cyan:      #3C83F6;
+            --accent-green:     #39FF14;
+            --accent-red:       #FF4545;
+            --accent-gold:      #FFBF00;
+
+            --text-primary:     #F0F6FF;
+            --text-on-card:     #1A2438;
+            --text-muted:       #94A3B8;
+            --text-muted-card:  #6B7280;
+            --text-dim:         #4B607A;
+
+            --border-subtle:    rgba(255, 255, 255, 0.06);
+            --border-glow:      rgba(60, 131, 246, 0.3);
+
+            --radius-sm:        8px;
+            --radius-md:        16px;
+            --radius-lg:        24px;
+            --container:        1600px;
+            --transition:       cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* =====================================================
+           RESET & BASE
+        ===================================================== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Barlow', sans-serif;
+            font-size: 18px;
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* =====================================================
+           ACCESSIBILITY
+        ===================================================== */
+        .skip-link {
+            position: absolute; top: -100px; left: 16px;
+            background: var(--accent-blue); color: #fff;
+            padding: 8px 16px; border-radius: var(--radius-sm);
+            font-weight: 700; z-index: 9999; transition: top 0.2s;
+        }
+        .skip-link:focus { top: 16px; }
+
+        *:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        /* =====================================================
+           TYPOGRAPHY
+        ===================================================== */
+        h1, h2, h3, h4, .condensed {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: 0.5px;
+        }
+
+        .headline-xl { font-size: clamp(3.5rem, 8vw, 6.5rem); text-transform: uppercase; }
+        .headline-lg { font-size: clamp(2.8rem, 5.5vw, 4.5rem); }
+        .headline-md { font-size: clamp(2rem, 4vw, 3rem); }
+
+        .subheadline { font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            color: var(--text-muted);
+            font-weight: 400;
+            line-height: 1.75;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .mono { font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+        section { position: relative; z-index: 1; padding: 100px 20px; }
+        .text-center { text-align: center; }
+
+        /* =====================================================
+           TAG / LABEL
+        ===================================================== */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            background: rgba(60, 131, 246, 0.08);
+            border: 1px solid rgba(60, 131, 246, 0.25);
+            padding: 7px 16px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+        }
+
+        .tag .live-dot {
+            width: 7px; height: 7px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.7); }
+        }
+
+        /* =====================================================
+           WHITE CARDS (replaces glassmorphism)
+        ===================================================== */
+        .glass {
+            background: var(--card-surface);
+            border: 1px solid rgba(60, 131, 246, 0.12);
+            border-radius: var(--radius-md);
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.04),
+                0 8px 24px rgba(0,0,0,0.08),
+                0 24px 48px rgba(0,0,0,0.05);
+            transition:
+                transform 0.35s var(--transition),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+            color: var(--text-on-card);
+        }
+
+        .glass:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 4px 8px rgba(0,0,0,0.06),
+                0 16px 40px rgba(60,131,246,0.14),
+                0 32px 64px rgba(0,0,0,0.08);
+            border-color: rgba(60, 131, 246, 0.28);
+        }
+
+        /* =====================================================
+           CTA BUTTON
+        ===================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3C83F6 0%, #1D5EDB 100%);
+            color: #fff;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 20px 42px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            box-shadow:
+                0 8px 24px rgba(60, 131, 246, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+            transition:
+                transform 0.3s var(--transition),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease,
+                background 0.35s ease;
+        }
+
+        /* Platinum sweep shimmer */
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -80%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 15%,
+                rgba(232,238,252,0.28) 50%,
+                transparent 85%
+            );
+            transform: skewX(-15deg);
+            transition: left 0.65s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Platinum border glow layer */
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            background: linear-gradient(135deg,
+                rgba(220,230,248,0.12) 0%,
+                rgba(180,200,230,0.04) 100%
+            );
+            transition: opacity 0.35s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #4B8FF8 0%, #2468E8 100%);
+            border-color: rgba(210,225,248,0.55);
+            box-shadow:
+                0 16px 40px rgba(60,131,246,0.45),
+                0 0 0 1px rgba(210,225,248,0.35),
+                0 0 28px rgba(210,228,255,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.40);
+            color: #fff;
+        }
+        .btn:hover::after { left: 130%; }
+        .btn:hover::before { opacity: 1; }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(60, 131, 246, 0.08);
+            color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(60, 131, 246, 0.2);
+        }
+
+        .btn-arrow { display: inline-block; transition: transform 0.2s ease; }
+        .btn:hover .btn-arrow { transform: translateX(4px); }
+
+        /* =====================================================
+           SECTION DIVIDER
+        ===================================================== */
+        .divider {
+            width: 100%; height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(60,131,246,0.2) 25%,
+                rgba(60,131,246,0.4) 50%,
+                rgba(60,131,246,0.2) 75%,
+                transparent 100%);
+            margin: 0 auto;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        @media (min-width: 1600px) {
+            .hero-inner { padding: 120px 64px 120px 0; }
+            .headline-xl { font-size: clamp(4rem, 5vw, 7rem); }
+            .subheadline { font-size: clamp(1.2rem, 1.4vw, 1.6rem) !important; }
+            .scrubber-wrap { max-width: 800px; }
+        }
+
+        #hero .container {
+            width: 100%;
+            max-width: var(--container);
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            padding: 0 24px;
+        }
+
+        /* LEFT COLUMN */
+        .hero-inner {
+            flex: 0 0 55%;
+            max-width: 55%;
+            padding: 100px 48px 100px 0;
+            text-align: left;
+        }
+
+        .hero-inner .pain-points { margin-left: 0; }
+        .hero-inner .trust-bar   { justify-content: flex-start; }
+
+        /* COUNTDOWN — PLATINUM */
+        .hero-countdown {
+            margin-top: 32px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(200,212,232,0.06) 0%, rgba(160,180,220,0.02) 100%);
+            border: 1px solid rgba(200,215,235,0.22);
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Platinum ray sweep across the whole countdown box */
+        .hero-countdown::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(105deg, transparent 20%, rgba(220,232,252,0.14) 50%, transparent 80%);
+            transform: skewX(-15deg);
+            animation: platinum-sweep 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .hero-countdown-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #C8D4E8;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .countdown-blocks {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .countdown-block {
+            flex: 1;
+            background: linear-gradient(160deg, rgba(215,225,240,0.10) 0%, rgba(180,195,220,0.04) 100%);
+            border: 1px solid rgba(200,215,235,0.28);
+            border-radius: var(--radius-sm);
+            padding: 10px 6px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Individual block ray — offset per block */
+        .countdown-block::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(105deg, transparent 15%, rgba(230,238,255,0.22) 50%, transparent 85%);
+            transform: skewX(-10deg);
+            animation: platinum-sweep 5s ease-in-out infinite;
+        }
+        .countdown-block:nth-child(2)::after { animation-delay: 1.25s; }
+        .countdown-block:nth-child(3)::after { animation-delay: 2.5s; }
+        .countdown-block:nth-child(4)::after { animation-delay: 3.75s; }
+        .countdown-num {
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(160deg, #E8EEF8 0%, #A8B8D0 50%, #D8E4F4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+            text-shadow: none;
+        }
+        .countdown-lbl {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(200,215,235,0.65);
+            margin-top: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SOCIAL PROOF STRIP — PLATINUM */
+        .hero-social-proof {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        .proof-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(210,220,235,0.06) 0%, rgba(160,175,200,0.02) 100%);
+            border: 1px solid rgba(200,215,235,0.20);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            color: #B8C8E0;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Platinum ray — staggered per child */
+        .proof-chip::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -80%;
+            width: 45%;
+            height: 100%;
+            background: linear-gradient(105deg, transparent 20%, rgba(230,238,252,0.20) 50%, transparent 80%);
+            transform: skewX(-15deg);
+            animation: platinum-sweep 5s ease-in-out infinite;
+        }
+        .proof-chip:nth-child(1)::after { animation-delay: 0s; }
+        .proof-chip:nth-child(2)::after { animation-delay: 1s; }
+        .proof-chip:nth-child(3)::after { animation-delay: 2s; }
+        .proof-chip:nth-child(4)::after { animation-delay: 3s; }
+        .proof-chip:nth-child(5)::after { animation-delay: 4s; }
+        .proof-chip-icon { font-size: 0.9rem; position: relative; z-index: 1; }
+
+        /* RIGHT COLUMN — sticky scrubber */
+        .hero-scrubber {
+            flex: 0 0 45%;
+            max-width: 45%;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scrubber-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 4/3;
+        }
+
+        .scrubber-wrap img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.12s ease;
+            pointer-events: none;
+        }
+
+        .scrubber-wrap img.active { opacity: 1; }
+
+        .scrubber-glow {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 40px;
+            background: rgba(60,131,246,0.18);
+            filter: blur(24px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* MOBILE */
+        @media (max-width: 900px) {
+            #hero .container { flex-direction: column; padding: 0 16px; }
+            .hero-inner {
+                flex: none; max-width: 100%;
+                padding: 80px 0 40px;
+                text-align: center;
+            }
+            .hero-inner .pain-points { margin: 36px auto 0; }
+            .hero-inner .trust-bar   { justify-content: center; }
+            .hero-social-proof       { justify-content: center; }
+            .countdown-blocks        { justify-content: center; }
+            .hero-scrubber           { display: none; }
+        }
+
+        .headline-accent { color: var(--accent-blue); }
+        .headline-green  { color: var(--accent-blue); }
+
+        .urgency-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 69, 69, 0.1);
+            border: 1px solid rgba(255, 69, 69, 0.3);
+            border-radius: 100px;
+            padding: 7px 18px;
+            margin-bottom: 20px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: #FF8080;
+            text-transform: uppercase;
+        }
+
+        .urgency-bar .fire {
+            width: 8px; height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+
+        /* Pain-point trigger buttons */
+        .pain-points {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 680px;
+            margin: 36px auto 0;
+            text-align: left;
+        }
+
+        /* =====================================================
+           FLOW HOVER BUTTONS — vaib215 style, per-ICP color
+        ===================================================== */
+        .pain-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 22px;
+            min-height: 64px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            cursor: pointer;
+            color: var(--text-primary);
+            font-family: 'Barlow', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            line-height: 1.4;
+            text-align: left;
+            width: 100%;
+            touch-action: manipulation;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            transition:
+                border-color 0.35s ease,
+                transform 0.3s var(--transition),
+                box-shadow 0.35s ease;
+        }
+
+        /* Flowing radial glow fill */
+        .pain-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Sweep shimmer line */
+        .pain-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 20%,
+                rgba(255,255,255,0.07) 50%,
+                transparent 80%
+            );
+            transform: skewX(-15deg);
+            transition: left 0.65s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .pain-btn:hover::after { left: 160%; }
+
+        /* TOFU — BRONZE */
+        .pain-btn[data-path-trigger="tofu"] {
+            border-color: rgba(176,109,50,0.28);
+            background: linear-gradient(135deg, rgba(176,109,50,0.06) 0%, rgba(120,70,25,0.02) 100%);
+        }
+        .pain-btn[data-path-trigger="tofu"]::before {
+            background: radial-gradient(ellipse at 0% 50%, rgba(205,138,80,0.16) 0%, transparent 70%);
+        }
+        .pain-btn[data-path-trigger="tofu"]:hover {
+            border-color: rgba(205,138,80,0.72);
+            box-shadow: 0 0 32px rgba(180,110,45,0.22), inset 0 0 22px rgba(205,138,80,0.09);
+            transform: translateX(6px);
+        }
+        .pain-btn[data-path-trigger="tofu"]:hover::before { opacity: 1; }
+        /* Bronze shimmer on track label */
+        .pain-btn[data-path-trigger="tofu"] .pain-btn-track {
+            background: linear-gradient(90deg, #CD8A50, #8B5530, #E8A870, #8B5530, #CD8A50);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: metal-shine 4s linear infinite;
+            opacity: 1 !important;
+        }
+        .pain-btn[data-path-trigger="tofu"] .pain-btn-arrow { color: #CD8A50 !important; }
+
+        /* MOFU — SILVER */
+        .pain-btn[data-path-trigger="mofu"] {
+            border-color: rgba(190,200,215,0.28);
+            background: linear-gradient(135deg, rgba(200,210,225,0.06) 0%, rgba(160,170,190,0.02) 100%);
+        }
+        .pain-btn[data-path-trigger="mofu"]::before {
+            background: radial-gradient(ellipse at 0% 50%, rgba(210,220,235,0.14) 0%, transparent 70%);
+        }
+        .pain-btn[data-path-trigger="mofu"]:hover {
+            border-color: rgba(210,220,235,0.72);
+            box-shadow: 0 0 32px rgba(190,205,225,0.20), inset 0 0 22px rgba(210,220,235,0.08);
+            transform: translateX(6px);
+        }
+        .pain-btn[data-path-trigger="mofu"]:hover::before { opacity: 1; }
+        /* Silver shimmer on track label */
+        .pain-btn[data-path-trigger="mofu"] .pain-btn-track {
+            background: linear-gradient(90deg, #B0BDD0, #E8EEF8, #8898B0, #E8EEF8, #B0BDD0);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: metal-shine 3.5s linear infinite;
+            opacity: 1 !important;
+        }
+        .pain-btn[data-path-trigger="mofu"] .pain-btn-arrow { color: #C8D4E8 !important; }
+
+        /* BOFU — GOLD */
+        .pain-btn[data-path-trigger="bofu"] {
+            border-color: rgba(255,191,0,0.25);
+            background: linear-gradient(135deg, rgba(255,191,0,0.06) 0%, rgba(200,145,0,0.02) 100%);
+        }
+        .pain-btn[data-path-trigger="bofu"]::before {
+            background: radial-gradient(ellipse at 0% 50%, rgba(255,200,50,0.14) 0%, transparent 70%);
+        }
+        .pain-btn[data-path-trigger="bofu"]:hover {
+            border-color: rgba(255,200,50,0.75);
+            box-shadow: 0 0 32px rgba(255,191,0,0.24), inset 0 0 22px rgba(255,200,50,0.10);
+            transform: translateX(6px);
+        }
+        .pain-btn[data-path-trigger="bofu"]:hover::before { opacity: 1; }
+        /* Gold shimmer on track label */
+        .pain-btn[data-path-trigger="bofu"] .pain-btn-track {
+            background: linear-gradient(90deg, #FFBF00, #FFF0A0, #C88000, #FFF0A0, #FFBF00);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: metal-shine 3s linear infinite;
+            opacity: 1 !important;
+        }
+        .pain-btn[data-path-trigger="bofu"] .pain-btn-arrow { color: #FFBF00 !important; }
+
+        @keyframes metal-shine {
+            0%   { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+
+        .pain-btn-accent {
+            flex-shrink: 0;
+            width: 4px;
+            height: 40px;
+            border-radius: 2px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pain-btn-body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pain-btn-track {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.55;
+            line-height: 1;
+            transition: opacity 0.25s ease;
+        }
+        .pain-btn:hover .pain-btn-track { opacity: 0.9; }
+
+        .pain-btn-arrow {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            opacity: 0.35;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .pain-btn:hover .pain-btn-arrow { opacity: 1; transform: translateX(4px); }
+
+        /* =====================================================
+           TRUST BAR + PROOF CHIPS — PLATINUM treatment
+        ===================================================== */
+        .trust-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 48px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(220,225,235,0.07) 0%, rgba(180,190,210,0.03) 100%);
+            border: 1px solid rgba(210,218,232,0.22);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: #C8D4E8;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Platinum shimmer sweep */
+        .trust-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -80%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                105deg,
+                transparent 20%,
+                rgba(220,228,240,0.22) 50%,
+                transparent 80%
+            );
+            transform: skewX(-15deg);
+            animation: platinum-sweep 4.5s ease-in-out infinite;
+        }
+        .trust-item:nth-child(2)::after { animation-delay: 1.5s; }
+        .trust-item:nth-child(3)::after { animation-delay: 3s; }
+
+        @keyframes platinum-sweep {
+            0%   { left: -80%; opacity: 0; }
+            8%   { opacity: 1; }
+            50%  { left: 130%; opacity: 1; }
+            51%  { opacity: 0; }
+            100% { left: 130%; opacity: 0; }
+        }
+
+        .trust-item .trust-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C8D4E8, #E8EEF8);
+            box-shadow: 0 0 6px rgba(200,212,232,0.8), 0 0 14px rgba(200,212,232,0.3);
+        }
+
+        /* =====================================================
+           BEFORE / AFTER
+        ===================================================== */
+        #dream-outcome {
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(60, 131, 246, 0.03) 50%,
+                transparent 100%);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 56px;
+        }
+
+        .col-card {
+            padding: 36px 32px;
+            text-align: left;
+            border-radius: var(--radius-md);
+        }
+
+        .col-before {
+            background: linear-gradient(145deg, rgba(255,69,69,0.06) 0%, rgba(17,30,53,0.6) 100%);
+            border: 1px solid rgba(255, 69, 69, 0.2);
+        }
+
+        .col-after {
+            background: linear-gradient(145deg, rgba(60,131,246,0.08) 0%, rgba(17,30,53,0.6) 100%);
+            border: 1px solid rgba(60, 131, 246, 0.3);
+            box-shadow: 0 0 40px rgba(60, 131, 246, 0.06) inset;
+        }
+
+        .col-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .col-card ul { list-style: none; }
+
+        .col-card li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .icon-x, .icon-check {
+            flex-shrink: 0;
+            width: 18px; height: 18px;
+            margin-top: 2px;
+        }
+
+        /* =====================================================
+           WHAT YOU'LL LEARN
+        ===================================================== */
+        #learn { background: transparent; }
+
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 56px;
+        }
+
+        /* New lc card system */
+        .lc {
+            background: #213052;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 32px 28px;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+        .lc[data-day="1"] { background: #121631; }
+        .lc[data-day="2"] { background: #161b38; }
+        .lc[data-day="3"] { background: #16233c; }
+        .lc[data-day="1"]:hover { border-color: rgba(255,191,0,0.5); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+        .lc[data-day="2"]:hover { border-color: rgba(60,131,246,0.5); box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+        .lc[data-day="3"]:hover { border-color: rgba(57,255,20,0.5);  box-shadow: 0 20px 60px rgba(0,0,0,0.4); transform: translateY(-4px); }
+        .day-num {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: -4px;
+            text-align: center;
+        }
+        .day-num-gold  { color: rgba(255,191,0,0.2); }
+        .day-num-blue  { color: rgba(60,131,246,0.2); }
+        .day-num-green { color: rgba(57,255,20,0.15); }
+        .card-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #F0F6FF;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .card-intro {
+            font-size: 0.92rem;
+            color: #94A3B8;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .card-img {
+            display: none;
+            width: 100%;
+            flex: 1;
+            object-fit: contain;
+            margin-top: 20px;
+            border-radius: 10px;
+            opacity: 0.9;
+        }
+        .card-bullets {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        .card-bullets li {
+            font-size: 0.88rem;
+            color: #94A3B8;
+            line-height: 1.55;
+            padding-left: 18px;
+            position: relative;
+            text-align: left;
+        }
+        .card-bullets li::before { content: '→'; position: absolute; left: 0; font-size: 0.8rem; }
+        .bullet-gold::before  { color: #FFBF00; }
+        .bullet-blue::before  { color: #3C83F6; }
+        .bullet-green::before { color: #39FF14; }
+        /* CSS-driven state — set data-active on grid */
+        .learn-grid[data-active="1"] .lc[data-day="1"] .card-bullets { display: flex; }
+        .learn-grid[data-active="1"] .lc[data-day="2"] .card-img     { display: block; }
+        .learn-grid[data-active="1"] .lc[data-day="3"] .card-img     { display: block; }
+        .learn-grid[data-active="2"] .lc[data-day="2"] .card-bullets { display: flex; }
+        .learn-grid[data-active="2"] .lc[data-day="1"] .card-img     { display: block; }
+        .learn-grid[data-active="2"] .lc[data-day="3"] .card-img     { display: block; }
+        .learn-grid[data-active="3"] .lc[data-day="3"] .card-bullets { display: flex; }
+        .learn-grid[data-active="3"] .lc[data-day="1"] .card-img     { display: block; }
+        .learn-grid[data-active="3"] .lc[data-day="2"] .card-img     { display: block; }
+        /* Mobile: stack, always show images */
+        @media (max-width: 768px) {
+            .learn-grid { grid-template-columns: 1fr; }
+            .lc { min-height: unset; transform: none !important; }
+            .card-img    { display: block !important; max-height: 220px; object-fit: contain; }
+            .card-bullets { display: none !important; }
+        }
+
+        /* =====================================================
+           REGISTER
+        ===================================================== */
+        #register { position: relative; }
+
+        #register::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 400px;
+            background: radial-gradient(ellipse, rgba(60,131,246,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .register-card {
+            max-width: 580px;
+            margin: 48px auto 0;
+            padding: 48px 44px;
+            border-top: 2px solid var(--accent-blue);
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: 50%;
+            transform: translateX(-50%);
+            width: 80px; height: 2px;
+            background: var(--accent-green);
+        }
+
+        .form-placeholder {
+            background: rgba(60, 131, 246, 0.04);
+            border: 1px dashed rgba(60, 131, 246, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-placeholder p {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .seats-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+        }
+
+        .seats-left .fire-icon { width: 14px; height: 14px; }
+
+        /* =====================================================
+           SCROLL ANIMATIONS
+        ===================================================== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(32px);
+            transition:
+                opacity 0.7s var(--transition),
+                transform 0.7s var(--transition);
+        }
+
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        @media (scripting: none) {
+            .fade-up { opacity: 1; transform: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-up, .glass, .btn, .tag .live-dot {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+        }
+
+        /* =====================================================
+           MOBILE STICKY CTA
+        ===================================================== */
+        .mobile-cta {
+            display: block;
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            min-width: 320px;
+            padding: 12px 16px;
+            background: transparent;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: none;
+            box-shadow: none;
+            z-index: 200;
+            transition: opacity 0.3s ease;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        @media (max-width: 1024px) { .learn-grid { grid-template-columns: 1fr 1fr; } }
+
+        @media (max-width: 768px) {
+            section { padding: 72px 16px; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .learn-grid { grid-template-columns: 1fr; }
+            .register-card { padding: 32px 24px; }
+            .trust-bar { gap: 8px; }
+            body { padding-bottom: 80px; }
+            .mobile-cta { display: block; }
+        }
+
+        @media (max-width: 480px) { .btn { font-size: 1.2rem; padding: 16px 28px; } }
+
+        /* =====================================================
+           PATH SELECTOR
+        ===================================================== */
+        #choose-path { padding: 100px 20px; }
+
+        .path-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 56px;
+        }
+
+        @media (max-width: 900px) {
+            .path-grid {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .path-card {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition:
+                transform 0.3s var(--transition),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+            text-align: left;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .path-card:hover { transform: translateY(-4px); }
+
+        .path-card.active {
+            background: rgba(255, 255, 255, 0.07);
+            transform: translateY(-4px);
+        }
+
+        .path-card-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .path-card h3 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .path-card-desc {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.65;
+            flex-grow: 1;
+            margin-bottom: 14px;
+        }
+
+        .path-card-income {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.3);
+            font-style: italic;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .path-card-cta {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.45;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .path-card:hover .path-card-cta,
+        .path-card.active .path-card-cta { opacity: 1; }
+
+        /* =====================================================
+           ACCORDION PANELS
+        ===================================================== */
+        .path-panel-wrap { margin-top: 28px; }
+
+        .path-panel {
+            display: none;
+            animation: panelFadeIn 0.4s var(--transition) forwards;
+        }
+
+        .path-panel.open { display: block; }
+
+        @keyframes panelFadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .path-panel { animation: none !important; }
+        }
+
+        .panel-inner {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: var(--radius-lg);
+            padding: 56px 52px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) { .panel-inner { padding: 36px 24px; } }
+
+        .panel-tag {
+            display: inline-flex;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 100px;
+            padding: 6px 14px;
+            margin-bottom: 20px;
+        }
+
+        .panel-headline {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.05;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .panel-sub {
+            font-size: 1.02rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 700px;
+            margin-bottom: 48px;
+        }
+
+        /* Before/After inside panel */
+        .panel-ba {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 52px;
+        }
+
+        @media (max-width: 640px) { .panel-ba { grid-template-columns: 1fr; } }
+
+        .panel-ba-col {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-md);
+            padding: 28px 24px;
+        }
+
+        .panel-ba-col h4 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .panel-ba-col ul { list-style: none; }
+
+        .panel-ba-col li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .panel-ba-col li svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px; }
+
+        /* Curriculum inside panel */
+        .panel-section-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .panel-days {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 48px;
+        }
+
+        .panel-day {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 52px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .panel-day-num {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 2.6rem;
+            line-height: 1;
+            opacity: 0.55;
+        }
+
+        .panel-day-content h4 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.45rem;
+            line-height: 1.1;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .panel-day-content .day-sub {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .panel-day-content p {
+            font-size: 0.93rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin-bottom: 10px;
+        }
+
+        .panel-day-content .takeaway {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        /* Value stack */
+        .panel-value {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            margin-bottom: 36px;
+        }
+
+        .panel-value-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .value-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .value-item svg { flex-shrink: 0; margin-top: 2px; }
+
+        .value-item-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .value-item-text strong { color: var(--text-primary); font-weight: 600; }
+
+        .panel-price-line {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .panel-price-total {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .panel-price-free {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        /* Placeholder panels */
+        .panel-placeholder {
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .panel-placeholder p {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        /* =====================================================
+           LARGE SCREEN (1440px+)
+        ===================================================== */
+        @media (min-width: 1440px) {
+            body { font-size: 20px; }
+            .headline-xl { font-size: clamp(4rem, 5.5vw, 8rem); }
+            .headline-lg { font-size: clamp(3rem, 4vw, 5.5rem); }
+            .subheadline { font-size: clamp(1.2rem, 1.5vw, 1.7rem) !important; }
+            .hero-inner { padding: 120px 80px 120px 0; }
+            .scrubber-wrap { max-width: 100%; aspect-ratio: 1/1; }
+            .hero-scrubber { flex: 0 0 50%; max-width: 50%; }
+            .hero-inner { flex: 0 0 50%; max-width: 50%; }
+            .pain-btn { font-size: 1.1rem; padding: 22px 28px; }
+            .trust-item { font-size: 0.85rem; padding: 10px 20px; }
+            .proof-chip { font-size: 0.8rem; padding: 8px 16px; }
+            .countdown-num { font-size: 2.4rem; }
+            .btn { font-size: 1.3rem; padding: 20px 40px; }
+            section { padding: 120px 40px; }
+        }
+
+        @media (min-width: 1800px) {
+            body { font-size: 22px; }
+            .headline-xl { font-size: clamp(5rem, 6vw, 10rem); }
+            .hero-inner { padding: 140px 100px 140px 0; }
+        }
+
+
+        /* =====================================================
+           AURORA BACKGROUND
+        ===================================================== */
+        /* =====================================================
+           AURORA — Aceternity-style conic-gradient rotation
+        ===================================================== */
+        .aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            filter: blur(12px) saturate(1.4);
+        }
+
+        /* Single pseudo-element carries the rotating conic sweep */
+        .aurora::before {
+            content: '';
+            position: absolute;
+            /* Oversized so rotation never reveals a corner gap */
+            width: 200vmax;
+            height: 200vmax;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            transform-origin: center center;
+            background: conic-gradient(
+                from 0deg at 50% 50%,
+                rgba(60,131,246,0.85)   0deg,
+                rgba(120,60,246,0.65)  60deg,
+                rgba(60,200,246,0.45)  110deg,
+                rgba(13,22,38,0.0)     160deg,
+                rgba(57,255,20,0.40)   200deg,
+                rgba(60,131,246,0.70)  260deg,
+                rgba(120,60,246,0.55)  310deg,
+                rgba(60,131,246,0.85)  360deg
+            );
+            animation: aurora-spin 28s linear infinite;
+            will-change: transform;
+        }
+
+        /* Four blobs still exist (HTML unchanged) — repurposed as
+           radial hot-spots that add depth on top of the conic base */
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            will-change: transform;
+            mix-blend-mode: screen;
+        }
+
+        .aurora-blob:nth-child(1) {
+            width: 80vw; height: 70vh;
+            top: -15%; left: -10%;
+            background: radial-gradient(ellipse, rgba(60,131,246,0.55) 0%, transparent 65%);
+            animation: aurora-drift-1 18s ease-in-out infinite alternate;
+        }
+        .aurora-blob:nth-child(2) {
+            width: 65vw; height: 60vh;
+            top: 5%; right: -10%;
+            background: radial-gradient(ellipse, rgba(57,255,20,0.28) 0%, transparent 65%);
+            animation: aurora-drift-2 22s ease-in-out infinite alternate;
+        }
+        .aurora-blob:nth-child(3) {
+            width: 60vw; height: 55vh;
+            bottom: -5%; left: 15%;
+            background: radial-gradient(ellipse, rgba(120,60,246,0.50) 0%, transparent 65%);
+            animation: aurora-drift-3 20s ease-in-out infinite alternate;
+        }
+        .aurora-blob:nth-child(4) {
+            width: 50vw; height: 50vh;
+            top: 35%; left: 30%;
+            background: radial-gradient(ellipse, rgba(60,200,246,0.38) 0%, transparent 65%);
+            animation: aurora-drift-4 24s ease-in-out infinite alternate;
+        }
+
+        @keyframes aurora-spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to   { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes aurora-drift-1 {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(10vw, 8vh) scale(1.15); }
+            100% { transform: translate(-6vw, -5vh) scale(0.92); }
+        }
+        @keyframes aurora-drift-2 {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(-8vw, 10vh) scale(1.10); }
+            100% { transform: translate(7vw, -7vh) scale(1.06); }
+        }
+        @keyframes aurora-drift-3 {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(6vw, -9vh) scale(0.90); }
+            100% { transform: translate(-5vw, 6vh) scale(1.12); }
+        }
+        @keyframes aurora-drift-4 {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(-9vw, -6vh) scale(1.15); }
+            100% { transform: translate(8vw, 5vh) scale(0.93); }
+        }
+
+        /* =====================================================
+           ALTERNATING SECTIONS + MONTSERRAT TITLES
+        ===================================================== */
+
+        /* Override aurora/dark background per section */
+        #hero           { background: rgba(51,51,51,0.82); }
+        #dream-outcome  { background: rgba(226,226,226,0.85); }
+        #learn          { background: rgba(51,51,51,0.82) !important; }
+        #choose-path    { background: rgba(226,226,226,0.85); }
+        #register       { background: rgba(51,51,51,0.82); }
+
+        /* Dividers hidden — they clash with alternating */
+        .divider { display: none; }
+
+        /* ── DARK SECTIONS — light text ── */
+        #hero,
+        #learn,
+        #register {
+            color: #F0F6FF;
+        }
+        #hero .subheadline,
+        #learn .subheadline,
+        #register .subheadline {
+            color: rgba(240,246,255,0.85) !important;
+            font-size: clamp(1.25rem, 2vw, 1.6rem) !important;
+            line-height: 1.8 !important;
+        }
+        #hero h1,
+        #learn h2,
+        #register h2 { color: #FFFFFF; }
+        #hero p,
+        #learn p,
+        #register p { font-size: 1.2rem; line-height: 1.85; }
+        #hero .trust-item { border-color: rgba(210,222,240,0.28); color: #D4E0F0; }
+        #hero .proof-chip { border-color: rgba(205,218,238,0.22); color: #C0D0E8; }
+        #hero .pain-btn   { background: rgba(255,255,255,0.035); color: #F0F6FF; }
+
+        /* ── LIGHT SECTIONS — dark text ── */
+        #dream-outcome,
+        #choose-path { color: #1A2438; }
+        #dream-outcome h2,
+        #choose-path h2 { color: #111827 !important; }
+        #dream-outcome .subheadline,
+        #choose-path .subheadline {
+            color: #374151 !important;
+            font-size: clamp(1.25rem, 2vw, 1.6rem) !important;
+            line-height: 1.8 !important;
+        }
+        #dream-outcome p,
+        #choose-path p { color: #374151; font-size: 1.2rem; line-height: 1.85; }
+        #dream-outcome .tag,
+        #choose-path .tag { background: rgba(60,131,246,0.1); border-color: rgba(60,131,246,0.3); color: #1D5EDB; }
+        #dream-outcome .col-before { background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+        #dream-outcome .col-before h3 { color: #CC2222; }
+        #dream-outcome .col-after  { background: rgba(60,131,246,0.08); border-color: rgba(60,131,246,0.3); }
+        #dream-outcome .col-after  h3 { color: #1D5EDB; }
+        #dream-outcome .col-card li   { color: #374151; font-size: 1.1rem; }
+        #choose-path .path-card { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.12); color: #1A2438; }
+        #choose-path .path-card:hover { background: rgba(255,255,255,0.9); }
+        #choose-path .path-card h3 { color: #111827; }
+        #choose-path .path-card-desc,
+        #choose-path .path-card-income { color: #4B5563; font-size: 1.05rem; }
+        #choose-path .path-panel-wrap { background: rgba(226,226,226,0.85); }
+        #choose-path .panel-inner { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.1); color: #1A2438; }
+        #choose-path .panel-headline { color: #111827; }
+        #choose-path .panel-sub      { color: #374151; font-size: 1.15rem; line-height: 1.85; }
+        #choose-path .panel-section-title { color: #111827; }
+        #choose-path .panel-day { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.08); }
+        #choose-path .panel-day-content h4 { color: #111827; }
+        #choose-path .panel-day-content p  { color: #374151; font-size: 1.1rem; line-height: 1.85; }
+        #choose-path .panel-day-content .takeaway { color: #6B7280; font-size: 1rem; }
+        #choose-path .panel-ba-col    { background: rgba(255,255,255,0.5); }
+        #choose-path .panel-ba-col h4 { color: #111827; }
+        #choose-path .panel-ba-col li { color: #374151; font-size: 1.05rem; }
+        #choose-path .value-item-text { color: #374151; font-size: 1.05rem; }
+        #choose-path .value-item-text strong { color: #111827; }
+        #choose-path .panel-value { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.08); }
+
+        /* ── Panel tag: visible on light background ── */
+        #choose-path .panel-tag[data-icp="tofu"] {
+            background: rgba(180, 100, 20, 0.10) !important;
+            border-color: rgba(180, 100, 20, 0.40) !important;
+            color: #7A4010 !important;
+        }
+        #choose-path .panel-tag[data-icp="mofu"] {
+            background: rgba(29, 94, 219, 0.09) !important;
+            border-color: rgba(29, 94, 219, 0.35) !important;
+            color: #1D5EDB !important;
+        }
+        #choose-path .panel-tag[data-icp="bofu"] {
+            background: rgba(5, 120, 80, 0.09) !important;
+            border-color: rgba(5, 120, 80, 0.30) !important;
+            color: #065F46 !important;
+        }
+
+        /* ── ICP panel: two-column layout with GIF slot ── */
+        .panel-top-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
+            align-items: flex-start;
+        }
+        .panel-top-copy { min-width: 0; }
+        .panel-icp-gif {
+            flex-shrink: 0;
+            width: 200px;
+            height: 200px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .panel-icp-gif img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .panel-icp-gif .gif-placeholder {
+            font-family: "DM Mono", monospace;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.25);
+            text-align: center;
+            padding: 16px;
+        }
+        @media (max-width: 768px) {
+            .panel-top-row { grid-template-columns: 1fr; }
+            .panel-icp-gif { display: none; }
+        }
+
+        /* ── MONTSERRAT for all headlines ── */
+        h1, h2, h3,
+        .headline-xl, .headline-lg, .headline-md,
+        .condensed, .card-title, .panel-headline,
+        .panel-section-title {
+            font-family: 'Montserrat', 'Barlow Condensed', sans-serif !important;
+            font-weight: 800;
+        }
+
+        /* ── BIGGER EVERYTHING for 35+ audience ── */
+        body { font-size: 20px; line-height: 1.85; }
+
+        .headline-xl { font-size: clamp(3.8rem, 7vw, 7rem) !important; }
+        .headline-lg { font-size: clamp(3rem, 5.5vw, 5rem) !important; }
+        .headline-md { font-size: clamp(2.4rem, 4vw, 3.5rem) !important; }
+
+        .subheadline {
+            font-size: clamp(1.25rem, 2vw, 1.6rem) !important;
+            line-height: 1.8 !important;
+            max-width: 760px !important;
+        }
+
+        /* Pain buttons larger */
+        .pain-btn { font-size: 1.15rem !important; min-height: 72px !important; padding: 22px 26px !important; }
+
+        /* Card text larger */
+        .card-intro { font-size: 1.1rem !important; line-height: 1.8 !important; }
+        .card-bullets li { font-size: 1rem !important; line-height: 1.7 !important; }
+        .card-title { font-size: 1.9rem !important; }
+
+        /* Path cards */
+        .path-card-desc { font-size: 1.1rem !important; line-height: 1.75 !important; }
+        .path-card h3 { font-size: clamp(1.5rem, 2.5vw, 2rem) !important; }
+
+        /* Panel content */
+        .panel-sub { font-size: 1.15rem !important; line-height: 1.85 !important; }
+        .panel-day-content p { font-size: 1.1rem !important; line-height: 1.85 !important; }
+        .panel-day-content h4 { font-size: 1.6rem !important; }
+        .panel-day-num { font-size: 3rem !important; }
+
+        /* Col cards */
+        .col-card li { font-size: 1.1rem !important; line-height: 1.7 !important; }
+        .col-card h3 { font-size: 1.9rem !important; }
+
+        /* Register card */
+        #register .register-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+        #register .form-placeholder { border-color: rgba(255,255,255,0.2); }
+        #register .form-placeholder p { color: rgba(255,255,255,0.4); }
+        #register h2 { color: #FFFFFF; }
+        #register .subheadline { color: rgba(240,246,255,0.85) !important; }
+
+        /* ── MOBILE CTA: transparent background, blue border ── */
+        .mobile-cta .btn {
+            background: transparent !important;
+            border: 2px solid rgba(60,131,246,0.7) !important;
+            color: #3C83F6 !important;
+            box-shadow: 0 8px 32px rgba(60,131,246,0.35) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+        }
+        .mobile-cta .btn:hover {
+            background: rgba(60,131,246,0.15) !important;
+            border-color: rgba(60,131,246,1) !important;
+            color: #fff !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="#hero-content" class="skip-link">Skip to main content</a>
+
+    <!-- Aurora background -->
+    <div class="aurora" aria-hidden="true">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+    </div>
+
+    <main>
+
+        <!-- ====================================================
+             HERO
+        ==================================================== -->
+        <section id="hero">
+            <div class="container">
+
+                <!-- LEFT: all copy -->
+                <div id="hero-content" class="hero-inner fade-up">
+
+                    <div class="urgency-bar" aria-label="Limited availability notice">
+                        <span class="fire" aria-hidden="true"></span>
+                        Only 47 Seats Remaining — Free Workshop
+                    </div>
+
+                    <div class="tag">
+                        <span class="live-dot" aria-hidden="true"></span>
+                        Automated Marketer — Live 3-Day Webinar
+                    </div>
+
+                    <h1 class="headline-xl" style="margin-bottom: 24px;">
+                        STOP HIRING DEVELOPERS.<br>
+                        <span class="headline-accent">BUILD YOUR FIRST AI AGENT.</span>
+                    </h1>
+
+                    <p class="subheadline" style="margin-bottom: 40px;">
+                        Move from AI slop to enterprise-grade systems. A FREE 3-day hands-on workshop where you'll bypass the terminal and build a Permanent AI Employee that runs your lead pipeline at <strong style="color: var(--text-primary);">$0.67/day</strong> — without writing a single line of code.
+                    </p>
+
+                    <!-- Pain-point trigger buttons -->
+                    <div class="pain-points" role="group" aria-label="Which of these sounds like you?">
+                        <button class="pain-btn"
+                                data-path-trigger="tofu"
+                                style="border-color: rgba(255,191,0,0.22);"
+                                aria-label="I run a business but AI feels out of reach">
+                            <span class="pain-btn-accent" style="background: var(--accent-gold);"></span>
+                            <span class="pain-btn-body">
+                                <span class="pain-btn-track" style="color: var(--accent-gold);">Just getting started</span>
+                                I run a business but AI feels out of reach
+                            </span>
+                            <span class="pain-btn-arrow" style="color: var(--accent-gold);" aria-hidden="true">→</span>
+                        </button>
+                        <button class="pain-btn"
+                                data-path-trigger="mofu"
+                                style="border-color: rgba(0,229,255,0.18);"
+                                aria-label="I have tools and tutorials. I just can't seem to ship.">
+                            <span class="pain-btn-accent" style="background: #00E5FF;"></span>
+                            <span class="pain-btn-body">
+                                <span class="pain-btn-track" style="color: #00E5FF;">Tried before, haven't shipped</span>
+                                I have tools and tutorials. I just can't seem to ship.
+                            </span>
+                            <span class="pain-btn-arrow" style="color: #00E5FF;" aria-hidden="true">→</span>
+                        </button>
+                        <button class="pain-btn"
+                                data-path-trigger="bofu"
+                                style="border-color: rgba(57,255,20,0.15);"
+                                aria-label="I want to sell AI systems — not just build them.">
+                            <span class="pain-btn-accent" style="background: var(--accent-green);"></span>
+                            <span class="pain-btn-body">
+                                <span class="pain-btn-track" style="color: var(--accent-green);">Ready to scale &amp; sell</span>
+                                I want to sell AI systems — not just build them.
+                            </span>
+                            <span class="pain-btn-arrow" style="color: var(--accent-green);" aria-hidden="true">→</span>
+                        </button>
+                    </div>
+
+                    <a href="#register" class="btn" style="margin-top: 36px;" aria-label="Save my free seat at the workshop">
+                        SAVE MY FREE SEAT <span class="btn-arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <div class="trust-bar" role="list" aria-label="Credentials">
+                        <div class="trust-item" role="listitem">
+                            <span class="trust-dot" aria-hidden="true"></span>
+                            25 Yrs Corporate IT
+                        </div>
+                        <div class="trust-item" role="listitem">
+                            <span class="trust-dot" aria-hidden="true"></span>
+                            3× GHL SaaS Award Winner
+                        </div>
+                        <div class="trust-item" role="listitem">
+                            <span class="trust-dot" aria-hidden="true"></span>
+                            4,200+ Students Trained
+                        </div>
+                    </div>
+
+                    <!-- Social proof chips -->
+                    <div class="hero-social-proof" aria-label="Social proof">
+                        <div class="proof-chip"><span class="proof-chip-icon">🏆</span> 3× HighLevel SaaS Award</div>
+                        <div class="proof-chip"><span class="proof-chip-icon">👨‍🎓</span> 4,200+ Students</div>
+                        <div class="proof-chip"><span class="proof-chip-icon">⭐</span> 5.0 Google Reviews</div>
+                        <div class="proof-chip"><span class="proof-chip-icon">🏢</span> 25 Yrs Fortune 100</div>
+                        <div class="proof-chip"><span class="proof-chip-icon">🎙️</span> Vibe Friday Live</div>
+                    </div>
+
+                    <!-- Countdown to April 27 2026 15:00 CST -->
+                    <div class="hero-countdown" aria-label="Workshop countdown">
+                        <div class="hero-countdown-label">⚡ Workshop starts in</div>
+                        <div class="countdown-blocks">
+                            <div class="countdown-block">
+                                <div class="countdown-num" id="cd-days">00</div>
+                                <div class="countdown-lbl">Days</div>
+                            </div>
+                            <div class="countdown-block">
+                                <div class="countdown-num" id="cd-hours">00</div>
+                                <div class="countdown-lbl">Hours</div>
+                            </div>
+                            <div class="countdown-block">
+                                <div class="countdown-num" id="cd-mins">00</div>
+                                <div class="countdown-lbl">Mins</div>
+                            </div>
+                            <div class="countdown-block">
+                                <div class="countdown-num" id="cd-secs">00</div>
+                                <div class="countdown-lbl">Secs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT: sticky scroll scrubber -->
+                <div class="hero-scrubber" aria-hidden="true">
+                    <div class="scrubber-wrap" id="scrubber-wrap">
+                        <img src="./frames new/1.png" alt="" class="active" id="sf-0">
+                        <img src="./frames new/2.png" alt="" id="sf-1">
+                        <img src="./frames new/3.png" alt="" id="sf-2">
+                        <img src="./frames new/4.png" alt="" id="sf-3">
+                        <img src="./frames new/5.png" alt="" id="sf-4">
+                        <img src="./frames new/6.png" alt="" id="sf-5">
+                        <div class="scrubber-glow"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <!-- ====================================================
+             BEFORE / AFTER
+        ==================================================== -->
+        <section id="dream-outcome" aria-labelledby="dreamoutcome-heading">
+            <div class="container text-center">
+
+                <div class="tag" style="border-color: rgba(60,131,246,0.4); color: #1D5EDB; background: rgba(60,131,246,0.08);">
+                    The Before. The After. The Gap We Close.
+                </div>
+
+                <h2 id="dreamoutcome-heading" class="headline-lg fade-up" style="margin-bottom: 16px;">
+                    Stop Being a "Prompter."<br>
+                    Start Being an <span class="headline-green">Architect.</span>
+                </h2>
+
+                <p class="subheadline fade-up">
+                    Right now you're drowning in YouTube tutorials, 47 browser tabs, and $500/day developers who don't understand your business logic. There's a better way.
+                </p>
+
+                <div class="comparison-grid fade-up">
+                    <div class="col-card col-before" aria-label="The old way: prompting">
+                        <h3 style="color: var(--accent-red);">The Old Way<br><small style="font-size: 1rem; opacity: 0.7; text-transform: none;">(Prompting)</small></h3>
+                        <ul>
+                            <li>
+                                <svg class="icon-x" aria-label="No" viewBox="0 0 18 18" fill="none">
+                                    <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="#FF4545" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Copy-pasting the same prompts every single day
+                            </li>
+                            <li>
+                                <svg class="icon-x" aria-label="No" viewBox="0 0 18 18" fill="none">
+                                    <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="#FF4545" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Paying expensive devs for basic API integrations
+                            </li>
+                            <li>
+                                <svg class="icon-x" aria-label="No" viewBox="0 0 18 18" fill="none">
+                                    <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="#FF4545" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Generic ChatGPT outputs that sound like a robot
+                            </li>
+                            <li>
+                                <svg class="icon-x" aria-label="No" viewBox="0 0 18 18" fill="none">
+                                    <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="#FF4545" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Wasting hours debugging Zapier/Make automations
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-card col-after" aria-label="The new way: architecture">
+                        <h3 style="color: var(--accent-blue);">The New Way<br><small style="font-size: 1rem; opacity: 0.7; text-transform: none;">(Architecture)</small></h3>
+                        <ul>
+                            <li>
+                                <svg class="icon-check" aria-label="Yes" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 9L7.5 13.5L15 4.5" stroke="#3C83F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Permanent AI Employees that run 24/7 on autopilot
+                            </li>
+                            <li>
+                                <svg class="icon-check" aria-label="Yes" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 9L7.5 13.5L15 4.5" stroke="#3C83F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Deploy custom web apps in minutes — zero code
+                            </li>
+                            <li>
+                                <svg class="icon-check" aria-label="Yes" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 9L7.5 13.5L15 4.5" stroke="#3C83F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Enterprise-grade Model Context Protocols (MCPs)
+                            </li>
+                            <li>
+                                <svg class="icon-check" aria-label="Yes" viewBox="0 0 18 18" fill="none">
+                                    <path d="M3 9L7.5 13.5L15 4.5" stroke="#3C83F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                GoHighLevel fully automated and intelligent
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <!-- ====================================================
+             WHAT YOU'LL LEARN
+        ==================================================== -->
+        <section id="learn" aria-labelledby="learn-heading">
+            <div class="container text-center">
+
+                <div class="tag">
+                    <span class="live-dot" aria-hidden="true"></span>
+                    3-Day Live Curriculum
+                </div>
+
+                <h2 id="learn-heading" class="headline-lg fade-up" style="margin-bottom: 16px;">
+                    What You'll Build
+                </h2>
+                <p class="subheadline fade-up">
+                    Three days. Three breakthroughs. Zero fluff.
+                </p>
+
+                <div class="learn-grid" id="learnGrid" style="margin-top: 56px;">
+
+                    <div class="lc fade-up" data-day="1" aria-label="Day 1">
+                        <p class="day-num day-num-gold">01</p>
+                        <p class="day-label" style="color:#FFBF00; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; text-align:center;">Day 1 — The Architect's Blueprint</p>
+                        <h3 class="card-title">Agent Architecture 101</h3>
+                        <p class="card-intro">Map your business logic into AI and eliminate expensive developers forever.</p>
+                        <img src="./frames new/s1.png" alt="" class="card-img">
+                        <ul class="card-bullets">
+                            <li class="bullet-gold">Discover how to map 25 years of business logic directly into an AI — no $500/day developer needed.</li>
+                            <li class="bullet-blue">Configure your MCP environment click-by-click to permanently kill terminal fear and guarantee zero setup lag.</li>
+                            <li class="bullet-gold">Create a CLAUDE.md playbook so your AI team permanently remembers your brand standards — forever.</li>
+                        </ul>
+                    </div>
+
+                    <div class="lc fade-up" data-day="2" aria-label="Day 2">
+                        <p class="day-num day-num-blue">02</p>
+                        <p class="day-label" style="color:#3C83F6; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; text-align:center;">Day 2 — The 15-Minute Blitz</p>
+                        <h3 class="card-title">Your Lead Pipeline Agent</h3>
+                        <p class="card-intro">Deploy a custom AI Employee that researches and qualifies leads while you sleep.</p>
+                        <img src="./frames new/s2.png" alt="" class="card-img">
+                        <ul class="card-bullets">
+                            <li class="bullet-gold">Watch a Lead Research Agent get built live — proving you have every technical skill needed to direct an AI workforce.</li>
+                            <li class="bullet-blue">Escape Starter Hell using the 120-Minute Deployment Framework to build, deploy and post a live URL before the session ends.</li>
+                            <li class="bullet-gold">Walk away as an Architect owning infrastructure that puts you 10x ahead of competitors stuck in manual mode.</li>
+                        </ul>
+                    </div>
+
+                    <div class="lc fade-up" data-day="3" aria-label="Day 3">
+                        <p class="day-num day-num-green">03</p>
+                        <p class="day-label" style="color:#39FF14; font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:3px; text-transform:uppercase; margin-bottom:10px; text-align:center;">Day 3 — The Permanent AI Workforce</p>
+                        <h3 class="card-title">Scale to $0.67/Day</h3>
+                        <p class="card-intro">Wire your agent into GHL so leads flow, pipelines update and follow-ups fire automatically.</p>
+                        <img src="./frames new/s3.png" alt="" class="card-img">
+                        <ul class="card-bullets">
+                            <li class="bullet-gold">Plug your AI team directly into GoHighLevel so leads and pipelines run on autopilot while you focus on high-value work.</li>
+                            <li class="bullet-blue">Wire your weekend project into a fully connected business system that qualifies prospects and fires follow-ups while you sleep.</li>
+                            <li class="bullet-green">Go from dependent on experts you can't afford to completely self-sufficient with an automated workforce at $0.67/day.</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <!-- ====================================================
+             PATH SELECTOR
+        ==================================================== -->
+        <section id="choose-path" aria-labelledby="choosepath-heading">
+            <div class="container text-center">
+
+                <h2 id="choosepath-heading" class="headline-lg fade-up" style="margin-bottom: 16px;">
+                    Find Your Path In.
+                </h2>
+
+                <p class="subheadline fade-up" style="max-width: 620px;">
+                    Everyone starts somewhere different. Pick the description that sounds most like you — and we'll show you exactly what this workshop unlocks for your situation.
+                </p>
+
+                <div class="tag fade-up" style="margin-top: 28px; border-color: rgba(60,131,246,0.4); color: var(--accent-blue); background: rgba(60,131,246,0.1);">
+                    Where are you in your path <span style="color: #3C83F6;">right now?</span>
+                </div>
+
+                <div class="path-grid">
+
+                    <!-- TOFU -->
+                    <button class="path-card fade-up"
+                            data-path-card="tofu"
+                            aria-expanded="false"
+                            aria-controls="panel-tofu"
+                            style="border-color: rgba(255,191,0,0.2);"
+                            onmouseenter="if(!this.classList.contains('active')){this.style.borderColor='rgba(255,191,0,0.35)';this.style.boxShadow='0 12px 40px rgba(255,191,0,0.1)';}"
+                            onmouseleave="if(!this.classList.contains('active')){this.style.borderColor='rgba(255,191,0,0.2)';this.style.boxShadow='';}">
+                        <p class="path-card-label" style="color: var(--accent-gold);">Just Getting Started</p>
+                        <h3 style="color: var(--accent-gold);">I run a business but AI feels out of reach</h3>
+                        <p class="path-card-desc">You have the expertise. You just need a system that works the way your business logic works — without hiring a developer or learning to code.</p>
+                        <p class="path-card-income">Perfect if you're currently paying $300–500/month on tools you're barely using.</p>
+                        <span class="path-card-cta" style="color: var(--accent-gold);">Show me the safe path in →</span>
+                    </button>
+
+                    <!-- MOFU -->
+                    <button class="path-card fade-up"
+                            data-path-card="mofu"
+                            aria-expanded="false"
+                            aria-controls="panel-mofu"
+                            style="border-color: rgba(0,229,255,0.18);"
+                            onmouseenter="if(!this.classList.contains('active')){this.style.borderColor='rgba(0,229,255,0.35)';this.style.boxShadow='0 12px 40px rgba(0,229,255,0.08)';}"
+                            onmouseleave="if(!this.classList.contains('active')){this.style.borderColor='rgba(0,229,255,0.18)';this.style.boxShadow='';}">
+                        <p class="path-card-label" style="color: #00E5FF;">Tried Before, Haven't Shipped</p>
+                        <h3 style="color: #00E5FF;">I have tools and tutorials. I just can't seem to ship.</h3>
+                        <p class="path-card-desc">You know the tools exist. You've saved the SOPs. You're stuck in "Starter Hell" with half-finished projects and no live URL to show for it.</p>
+                        <p class="path-card-income">Perfect if you're ready to go from $0 shipped to your first live AI agent this weekend.</p>
+                        <span class="path-card-cta" style="color: #00E5FF;">Take me to the build track →</span>
+                    </button>
+
+                    <!-- BOFU -->
+                    <button class="path-card fade-up"
+                            data-path-card="bofu"
+                            aria-expanded="false"
+                            aria-controls="panel-bofu"
+                            style="border-color: rgba(57,255,20,0.15);"
+                            onmouseenter="if(!this.classList.contains('active')){this.style.borderColor='rgba(57,255,20,0.3)';this.style.boxShadow='0 12px 40px rgba(57,255,20,0.07)';}"
+                            onmouseleave="if(!this.classList.contains('active')){this.style.borderColor='rgba(57,255,20,0.15)';this.style.boxShadow='';}">
+                        <p class="path-card-label" style="color: var(--accent-green);">Ready to Scale &amp; Sell</p>
+                        <h3 style="color: var(--accent-green);">I want to sell AI systems — not just build them.</h3>
+                        <p class="path-card-desc">You're past the basics. You're tired of hitting walls alone at 3:45 PM. You want a connected AI Nervous System inside GHL that you can deploy for clients.</p>
+                        <p class="path-card-income">Perfect if you're ready to move from $400 projects to $2,500+ AI implementation deals.</p>
+                        <span class="path-card-cta" style="color: var(--accent-green);">Take me to the advanced track →</span>
+                    </button>
+
+                </div>
+
+                <!-- ACCORDION PANELS -->
+                <div class="path-panel-wrap" aria-live="polite">
+
+                    <!-- TOFU PANEL -->
+                    <div id="panel-tofu" class="path-panel" role="region" data-path-panel="tofu">
+                        <div class="panel-inner">
+
+                            <div class="panel-top-row">
+                                <div class="panel-top-copy">
+                                    <div class="panel-tag" data-icp="tofu" style="background: rgba(255,191,0,0.08); border: 1px solid rgba(255,191,0,0.25); color: var(--accent-gold);">
+                                        For the Business Owner Who's Been Waiting for the Right Guide
+                                    </div>
+
+                                    <h3 class="panel-headline">
+                                        Your expertise is not the problem.<br>
+                                        <span style="color: var(--accent-gold);">The setup is.</span>
+                                    </h3>
+
+                                    <p class="panel-sub">
+                                        You've spent years — maybe decades — building real knowledge, real relationships, real results. And now you're watching people with half your experience move twice as fast because they figured out how to automate what you're still doing manually.<br><br>
+                                        Here's what nobody tells you: the advantage was never the code. It was always the business logic. And that? You already have. This workshop is about showing you that your career and your way of thinking about problems is exactly what an AI system needs to run.
+                                    </p>
+                                </div>
+                                <div class="panel-icp-gif" id="gif-slot-tofu">
+                                    <!-- Upload icp1.gif and replace this placeholder -->
+                                    <img src="./frames new/icp1.gif" alt="Path 1">
+                                </div>
+                            </div>
+
+                            <!-- Before / After -->
+                            <div class="panel-ba">
+                                <div class="panel-ba-col" style="border: 1px solid rgba(255,69,69,0.15);">
+                                    <h4 style="color: var(--accent-red);">Before</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Paying $500/day for a developer who doesn't know your business
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Re-explaining your brand standards to every tool and contractor
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Feeling left behind while competitors automate
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Terrified to touch anything technical
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="panel-ba-col" style="border: 1px solid rgba(255,191,0,0.2);">
+                                    <h4 style="color: var(--accent-gold);">After</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#FFBF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            AI that runs on YOUR business logic — built by you
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#FFBF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            One playbook your AI remembers forever
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#FFBF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Owning the infrastructure that puts you ahead
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#FFBF00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Confident architect directing an AI team
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Curriculum -->
+                            <p class="panel-section-title">A 3-day roadmap designed for you.</p>
+
+                            <div class="panel-days">
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-gold);">01</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Architect's Blueprint</h4>
+                                        <p class="day-sub" style="color: var(--accent-gold);">Kill terminal fear. Build your AI's memory.</p>
+                                        <p>We set up your AI playbook — a simple document that tells your AI your brand standards, your rules, your tone, and your business context. Once it's built, your AI remembers everything. No terminal. No command line. Just you, a document, and an AI that finally works the way your business works.</p>
+                                        <p class="takeaway">You'll walk away with: An AI environment that knows your business — and never forgets it.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-gold);">02</div>
+                                    <div class="panel-day-content">
+                                        <h4>The 15-Minute Blitz</h4>
+                                        <p class="day-sub" style="color: var(--accent-gold);">Watch your first AI agent go live.</p>
+                                        <p>On Day 2 we build a Lead Research Agent together. You'll watch it happen, follow each step, and end the session with a live deployed URL — your first working AI tool, built by you.</p>
+                                        <p class="takeaway">You'll walk away with: Proof that you can build this. A live URL with your name on it.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-gold);">03</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Permanent AI Workforce</h4>
+                                        <p class="day-sub" style="color: var(--accent-gold);">Connect everything to GoHighLevel.</p>
+                                        <p>Day 3 is where your AI team plugs into your business infrastructure. Leads in. Follow-ups out. Pipeline updated. All automatic. All running while you focus on the work only you can do.</p>
+                                        <p class="takeaway">You'll walk away with: A GHL pipeline running on autopilot — managed by the AI team you built.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Value Stack -->
+                            <div class="panel-value">
+                                <p class="panel-value-title">Everything included. Nothing skipped.</p>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#FFBF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>3 Live Build Sessions</strong> — Narrated step by step. No assumptions. No skipped clicks. <span style="color: var(--text-dim);">($1,200 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#FFBF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>The AI Playbook Template</strong> — The exact document structure Nuno uses to teach his AI his business rules. Yours to keep forever. <span style="color: var(--text-dim);">($497 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#FFBF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>10-Lesson SOP Library (Mac &amp; Windows)</strong> — Every setup step written in plain language. <span style="color: var(--text-dim);">($1,497 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#FFBF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Lifetime Community Access</strong> — 4,200+ builders ready to answer questions in real time. <span style="color: var(--text-dim);">($1,500 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#FFBF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>30-Day Replay Access</strong> — Rewatch any session at your pace. <span style="color: var(--text-dim);">($297 Value)</span></p>
+                                </div>
+                                <div class="panel-price-line">
+                                    <span class="panel-price-total">Total perceived value: $5,991</span>
+                                    <span class="panel-price-free" style="color: var(--accent-gold);">Your price: FREE</span>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <a href="#register" class="btn"
+                                   style="background: linear-gradient(135deg, #FFBF00 0%, #FF8C00 100%); color: #0A0800; box-shadow: 0 8px 24px rgba(255,191,0,0.4);"
+                                   aria-label="Claim my free seat">
+                                    CLAIM MY FREE SEAT <span class="btn-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- MOFU PANEL (placeholder) -->
+                    <div id="panel-mofu" class="path-panel" role="region" data-path-panel="mofu">
+                        <div class="panel-inner">
+
+                            <div class="panel-top-row">
+                                <div class="panel-top-copy">
+                                    <div class="panel-tag" data-icp="mofu" style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); color: var(--accent-blue, #3B82F6);">
+                                        For the Weekend Builder Stuck in "Starter Hell"
+                                    </div>
+
+                                    <h3 class="panel-headline">
+                                        You don't need another tutorial.<br>
+                                        <span style="color: var(--accent-blue, #3B82F6);">You need a system that actually deploys.</span>
+                                    </h3>
+
+                                    <p class="panel-sub">
+                                        You've done everything right. You watched the videos. You saved the SOPs. You signed up for the tools. And somehow you're still staring at the same half-finished project that was "almost done" three weekends ago.<br><br>
+                                        That's not a motivation problem. That's a system problem. This workshop is different. We build live. We deploy live. And we don't end a session until you have a working URL. Not a demo. Not a prototype. A real deployed AI agent with your name on it.
+                                    </p>
+                                </div>
+                                <div class="panel-icp-gif" id="gif-slot-mofu">
+                                    <!-- Upload icp2.gif and replace this placeholder -->
+                                   <img src="./frames new/icp2.gif" alt="Path 2">
+                                </div>
+                            </div>
+
+                            <div class="panel-ba">
+                                <div class="panel-ba-col" style="border: 1px solid rgba(255,69,69,0.15);">
+                                    <h4 style="color: var(--accent-red, #FF4545);">Before</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            50 saved tutorials, 0 shipped apps
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Stuck in "Starter Hell" at 90% done
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Alone at 3:45 PM when the error hits
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Watching demos that never show the hard parts
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Another weekend of "I'll finish it next week"
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="panel-ba-col" style="border: 1px solid rgba(59, 130, 246, 0.2);">
+                                    <h4 style="color: var(--accent-blue, #3B82F6);">After</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Live deployed agent URL in 120 minutes
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Finished, deployed, and working
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Building live with 4,200+ builders in the room
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Narrated step-by-step with zero skipped clicks
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Done before Sunday dinner
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="panel-section-title">A 3-day roadmap designed for you.</p>
+
+                            <div class="panel-days">
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-blue, #3B82F6);">01</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Architect's Blueprint</h4>
+                                        <p class="day-sub" style="color: var(--accent-blue, #3B82F6);">Configure once. Build forever.</p>
+                                        <p>We kill the setup problem on Day 1. You'll configure your environment using MCP (Model Context Protocol) inside Claude Code and write your CLAUDE.md playbook — the document that tells your AI your rules and context forever. No more re-configuring. No more blank-slate sessions. Day 2 starts ready to build.</p>
+                                        <p class="takeaway">You'll walk away with: A fully configured environment. Zero setup lag on Day 2.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-blue, #3B82F6);">02</div>
+                                    <div class="panel-day-content">
+                                        <h4>The 15-Minute Blitz</h4>
+                                        <p class="day-sub" style="color: var(--accent-blue, #3B82F6);">Ship a working Lead Research Agent — live. In 120 minutes.</p>
+                                        <p>This is the session you've been waiting for. We use iterative AI planning to build a Lead Research Agent that scours the web, qualifies prospects based on your criteria, and generates ready-to-contact lead lists. You build it. You deploy it. You post the live URL in the chat before the session ends.</p>
+                                        <p class="takeaway">You'll walk away with: Your first live deployed AI agent URL. Posted. Public. Proof.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-blue, #3B82F6);">03</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Permanent AI Workforce</h4>
+                                        <p class="day-sub" style="color: var(--accent-blue, #3B82F6);">Connect your agent to GoHighLevel.</p>
+                                        <p>Day 3 turns your weekend project into a business system. We wire your agent into GHL — leads flow in, pipelines update, follow-ups fire automatically. What started as a Saturday experiment becomes infrastructure that runs your business while you sleep.</p>
+                                        <p class="takeaway">You'll walk away with: A fully connected GHL pipeline running on autopilot.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-value">
+                                <p class="panel-value-title">Everything optimized to get you from zero to shipped.</p>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>3 Live Build Sessions</strong> — Real implementation in real time. You build alongside Nuno until it deploys. <span style="color: var(--text-dim);">($1,200 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>The 120-Minute Deployment Framework</strong> — The exact sequence to go from blank screen to live URL. <span style="color: var(--text-dim);">($997 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Copy-Paste Prompt Library</strong> — Pre-written prompts for every stage of the build. No JSON file panic. <span style="color: var(--text-dim);">($497 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>10-Lesson SOP Library & Pre-Work Guide</strong> — Every error anticipated. Zero setup lag. <span style="color: var(--text-dim);">($1,794 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>GHL + MCP Connectivity Framework</strong> — Pre-configured setup for flawless Day 3 integration. <span style="color: var(--text-dim);">($997 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Lifetime Community Access</strong> — 4,200+ builders who've solved every wall you're about to hit. <span style="color: var(--text-dim);">($1,500 Value)</span></p>
+                                </div>
+                                <div class="panel-price-line">
+                                    <span class="panel-price-total">Total perceived value: $6,985</span>
+                                    <span class="panel-price-free" style="color: var(--accent-blue, #3B82F6);">Your price: FREE</span>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <a href="#register" class="btn"
+                                   style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); color: #FFFFFF; box-shadow: 0 8px 24px rgba(59,130,246,0.4);"
+                                   aria-label="Secure My Free Build Seat">
+                                    SECURE MY FREE BUILD SEAT <span class="btn-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- BOFU PANEL (placeholder) -->
+                    <div id="panel-bofu" class="path-panel" role="region" data-path-panel="bofu">
+                        <div class="panel-inner">
+
+                            <div class="panel-top-row">
+                                <div class="panel-top-copy">
+                                    <div class="panel-tag" data-icp="bofu" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); color: var(--accent-green, #10B981);">
+                                        For the Agency Owner Ready to Scale Without Headcount
+                                    </div>
+
+                                    <h3 class="panel-headline">
+                                        Your agency is growing.<br>
+                                        <span style="color: var(--accent-green, #10B981);">Your margins aren't.</span>
+                                    </h3>
+
+                                    <p class="panel-sub">
+                                        You've figured out how to close. But every new client means hiring another VA, building another fragile Zapier sequence, and praying nothing breaks over the weekend. You're scaling complexity, not profit.<br><br>
+                                        You don't need more headcount or software bloat. You need infrastructure. This workshop shows you how to replace fragile operations with a permanent AI workforce that executes your fulfillment at zero marginal cost. 
+                                    </p>
+                                </div>
+                                <div class="panel-icp-gif" id="gif-slot-bofu">
+                                    <!-- Upload icp3.gif and replace this placeholder -->
+                                   <img src="./frames new/icp3.gif" alt="Path 3">
+                                </div>
+                            </div>
+
+                            <div class="panel-ba">
+                                <div class="panel-ba-col" style="border: 1px solid rgba(255,69,69,0.15);">
+                                    <h4 style="color: var(--accent-red, #FF4545);">Before</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Margins eaten alive by payroll and VA costs
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Babysitting fragile Zapier sequences that break daily
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Capping growth because fulfillment can't keep up
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="#FF4545" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                            Managing people instead of growing the business
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="panel-ba-col" style="border: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <h4 style="color: var(--accent-green, #10B981);">After</h4>
+                                    <ul>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            AI agents running fulfillment at zero marginal cost
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Robust infrastructure wired directly into GoHighLevel
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Infinite capacity to take on new agency clients
+                                        </li>
+                                        <li>
+                                            <svg viewBox="0 0 16 16" fill="none"><path d="M2.5 8L6.5 12L13.5 4" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            Owning true leverage instead of renting time
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="panel-section-title">A 3-day roadmap designed for scale.</p>
+
+                            <div class="panel-days">
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-green, #10B981);">01</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Architect's Blueprint</h4>
+                                        <p class="day-sub" style="color: var(--accent-green, #10B981);">Build the foundation for infinite scale.</p>
+                                        <p>We eliminate operational bottlenecks on Day 1. You'll structure your MCP environment and define your AI Playbook. This becomes the universal rulebook for your agency's AI, ensuring standard operating procedures are hardcoded into the systems handling your client accounts.</p>
+                                        <p class="takeaway">You'll walk away with: A centralized, scalable AI environment ready to deploy across all client accounts.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-green, #10B981);">02</div>
+                                    <div class="panel-day-content">
+                                        <h4>The 15-Minute Blitz</h4>
+                                        <p class="day-sub" style="color: var(--accent-green, #10B981);">Ship an autonomous agent that does the heavy lifting.</p>
+                                        <p>Watch how fast fulfillment can actually happen. We will iteratively build and deploy an AI agent that handles complex logic, research, and data processing. No more hiring a new VA for every 5 clients. You build the agent once, and it serves infinitely.</p>
+                                        <p class="takeaway">You'll walk away with: A live, deployed AI worker that replaces expensive manual fulfillment hours.</p>
+                                    </div>
+                                </div>
+                                <div class="panel-day">
+                                    <div class="panel-day-num" style="color: var(--accent-green, #10B981);">03</div>
+                                    <div class="panel-day-content">
+                                        <h4>The Permanent AI Workforce</h4>
+                                        <p class="day-sub" style="color: var(--accent-green, #10B981);">Turn GoHighLevel into an autonomous engine.</p>
+                                        <p>This is where your margins explode. Day 3 connects your custom AI agents directly into GoHighLevel. Leads flow, data is processed, and campaigns fire automatically. You are no longer running an agency; you are managing a high-margin software business.</p>
+                                        <p class="takeaway">You'll walk away with: A fully autonomous GHL pipeline that scales your agency effortlessly.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-value">
+                                <p class="panel-value-title">Everything you need to step out of the daily operations.</p>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>3 Live Build Sessions</strong> — Build the core infrastructure yourself so you own the leverage. <span style="color: var(--text-dim);">($1,200 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Agency AI Framework</strong> — The exact blueprint for scaling GHL operations without adding payroll. <span style="color: var(--text-dim);">($997 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>GHL + MCP Connectivity Blueprint</strong> — Turn GoHighLevel into a self-managing fulfillment engine. <span style="color: var(--text-dim);">($997 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>10-Lesson SOP Library</strong> — Documented workflows so you can easily train your remaining team. <span style="color: var(--text-dim);">($1,497 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Copy-Paste Prompt Library</strong> — Eliminate the trial and error of making the AI sound like your brand. <span style="color: var(--text-dim);">($497 Value)</span></p>
+                                </div>
+                                <div class="value-item">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8.5 14.5L16 5.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <p class="value-item-text"><strong>Lifetime Community Access</strong> — Connect with 4,200+ other builders and agency owners. <span style="color: var(--text-dim);">($1,500 Value)</span></p>
+                                </div>
+                                <div class="panel-price-line">
+                                    <span class="panel-price-total">Total perceived value: $6,688</span>
+                                    <span class="panel-price-free" style="color: var(--accent-green, #10B981);">Your price: FREE</span>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <a href="#register" class="btn"
+                                   style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFFFFF; box-shadow: 0 8px 24px rgba(16,185,129,0.4);"
+                                   aria-label="Build My AI Infrastructure">
+                                    BUILD MY AI INFRASTRUCTURE <span class="btn-arrow" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="divider" role="separator" aria-hidden="true"></div>
+
+        <!-- ====================================================
+             REGISTER
+        ==================================================== -->
+        <section id="register" aria-labelledby="register-heading">
+            <div class="container text-center">
+
+                <div class="tag" style="border-color: rgba(255,191,0,0.3); color: var(--accent-gold); background: rgba(255,191,0,0.06);">
+                    Free — No Credit Card Required
+                </div>
+
+                <h2 id="register-heading" class="headline-lg fade-up" style="margin-bottom: 16px;">
+                    Secure Your Free Seat Now
+                </h2>
+                <p class="subheadline fade-up">
+                    Seats are limited and filling fast. Reserve yours before they're gone.
+                </p>
+
+                <div class="register-card glass fade-up">
+                    <div class="form-placeholder" aria-label="Registration form loading area">
+                        <p>[ GHL Form Embed ]</p>
+                    </div>
+
+                    <a href="#register" class="btn" style="width: 100%; font-size: 1.35rem;" aria-label="Reserve my spot at the free workshop">
+                        RESERVE MY SPOT NOW <span class="btn-arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <div class="seats-left" aria-live="polite" aria-label="47 spots remaining">
+                        <svg class="fire-icon" aria-hidden="true" viewBox="0 0 14 14" fill="none">
+                            <circle cx="7" cy="7" r="5" fill="#FFBF00" opacity="0.8"/>
+                        </svg>
+                        47 spots remaining — fills in real time
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Mobile sticky CTA -->
+    <div class="mobile-cta" role="complementary" aria-label="Quick registration shortcut">
+        <a href="#register" class="btn" style="width: 100%; text-align: center; padding: 14px; font-size: 1.2rem;" aria-label="Save my free seat">
+            SAVE MY FREE SEAT <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+    </div>
+
+    <script>
+        // ── PATH ACCORDION ─────────────────────────────────────────
+        const defaultBorders = {
+            tofu: 'rgba(255,191,0,0.2)',
+            mofu: 'rgba(0,229,255,0.18)',
+            bofu: 'rgba(57,255,20,0.15)'
+        };
+        const activeBorders = {
+            tofu: 'rgba(255,191,0,0.5)',
+            mofu: 'rgba(0,229,255,0.5)',
+            bofu: 'rgba(57,255,20,0.35)'
+        };
+        const activeGlows = {
+            tofu: '0 16px 48px rgba(255,191,0,0.12)',
+            mofu: '0 16px 48px rgba(0,229,255,0.1)',
+            bofu: '0 16px 48px rgba(57,255,20,0.08)'
+        };
+
+        function closeAll() {
+            document.querySelectorAll('.path-panel').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('[data-path-card]').forEach(c => {
+                const t = c.dataset.pathCard;
+                c.classList.remove('active');
+                c.setAttribute('aria-expanded', 'false');
+                c.style.borderColor = defaultBorders[t] || '';
+                c.style.boxShadow = '';
+            });
+        }
+
+        function openPanel(track) {
+            closeAll();
+            const panel = document.getElementById('panel-' + track);
+            const card  = document.querySelector('[data-path-card="' + track + '"]');
+            if (!panel || !card) return;
+
+            panel.classList.add('open');
+            card.classList.add('active');
+            card.setAttribute('aria-expanded', 'true');
+            card.style.borderColor = activeBorders[track] || '';
+            card.style.boxShadow   = activeGlows[track] || '';
+
+            setTimeout(() => {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 80);
+        }
+
+        function togglePanel(track) {
+            const panel = document.getElementById('panel-' + track);
+            if (panel && panel.classList.contains('open')) {
+                closeAll();
+            } else {
+                openPanel(track);
+            }
+        }
+
+        // Path cards
+        document.querySelectorAll('[data-path-card]').forEach(card => {
+            card.addEventListener('click', () => togglePanel(card.dataset.pathCard));
+        });
+
+        // Hero pain-point buttons
+        document.querySelectorAll('[data-path-trigger]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const track = btn.dataset.pathTrigger;
+                const section = document.getElementById('choose-path');
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => openPanel(track), 420);
+                }
+            });
+        });
+
+        // ── SCROLL ANIMATIONS ──────────────────────────────────────
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { rootMargin: '0px 0px -60px 0px', threshold: 0.1 }
+        );
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        document.querySelectorAll('.fade-up').forEach(el => {
+            if (prefersReducedMotion) {
+                el.classList.add('visible');
+            } else {
+                observer.observe(el);
+            }
+        });
+
+        // Stagger grids
+        document.querySelectorAll('.comparison-grid, .path-grid').forEach(grid => {
+            grid.querySelectorAll('.fade-up').forEach((card, i) => {
+                card.style.transitionDelay = `${i * 80}ms`;
+            });
+        });
+    </script>
+
+
+    <!-- ============ COUNTDOWN ============ -->
+    <script>
+        (function() {
+            var target = new Date('2026-04-27T21:00:00Z').getTime();
+            function tick() {
+                var now  = Date.now();
+                var diff = Math.max(0, target - now);
+                var d = Math.floor(diff / 86400000);
+                var h = Math.floor((diff % 86400000) / 3600000);
+                var m = Math.floor((diff % 3600000)  / 60000);
+                var s = Math.floor((diff % 60000)    / 1000);
+                var pad = function(n){ return String(n).padStart(2,'0'); };
+                document.getElementById('cd-days').textContent  = pad(d);
+                document.getElementById('cd-hours').textContent = pad(h);
+                document.getElementById('cd-mins').textContent  = pad(m);
+                document.getElementById('cd-secs').textContent  = pad(s);
+            }
+            tick();
+            setInterval(tick, 1000);
+        })();
+    </script>
+
+    <!-- ============ SCROLL SCRUBBER ============ -->
+    <script>
+        (function() {
+            var TOTAL = 6;
+            var frames = [];
+            for (var i = 0; i < TOTAL; i++) {
+                frames.push(document.getElementById('sf-' + i));
+            }
+            var hero = document.getElementById('hero');
+            var current = 0;
+
+            function showFrame(idx) {
+                idx = Math.max(0, Math.min(TOTAL - 1, idx));
+                if (idx === current) return;
+                frames[current].classList.remove('active');
+                frames[idx].classList.add('active');
+                current = idx;
+            }
+
+            function onScroll() {
+                var rect   = hero.getBoundingClientRect();
+                var total  = hero.offsetHeight - window.innerHeight;
+                if (total <= 0) return;
+                var scrolled = -rect.top;
+                var progress = Math.max(0, Math.min(1, scrolled / total));
+                var idx = Math.round(progress * (TOTAL - 1));
+                showFrame(idx);
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        })();
+    </script>
+
+<script>
+(function() {
+    var cta = document.querySelector('.mobile-cta');
+    var register = document.getElementById('register');
+    if (!cta || !register) return;
+    window.addEventListener('scroll', function() {
+        var rect = register.getBoundingClientRect();
+        if (rect.top <= window.innerHeight) {
+            cta.style.opacity = '0';
+            cta.style.pointerEvents = 'none';
+        } else {
+            cta.style.opacity = '1';
+            cta.style.pointerEvents = 'auto';
+        }
+    }, { passive: true });
+})();
+</script>
+
+
+    <!-- Learn card hover — CSS data-active approach -->
+    <script>
+    (function() {
+        var grid  = document.getElementById('learnGrid');
+        var cards = document.querySelectorAll('.lc');
+        cards.forEach(function(card) {
+            card.addEventListener('mouseenter', function() {
+                grid.setAttribute('data-active', card.getAttribute('data-day'));
+            });
+            card.addEventListener('mouseleave', function() {
+                grid.removeAttribute('data-active');
+            });
+        });
+    })();
+    </script>
+
+</body>
+</html>
