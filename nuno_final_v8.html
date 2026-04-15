@@ -296,7 +296,7 @@
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
-            padding-top: 0;
+            padding-top: 56px;
             padding-bottom: 0;
         }
 
@@ -1757,6 +1757,20 @@
 <body>
 
     <a href="#hero-content" class="skip-link">Skip to main content</a>
+
+    <!-- ═══ SITE NAV ═══ -->
+    <style>
+    .snav{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:center;align-items:center;padding:.85rem 2.5rem;background:rgba(13,22,38,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.06);z-index:9998;}
+    .snav-webinar-btn{position:relative;overflow:hidden;background:linear-gradient(135deg,#D4AF37 0%,#FFE680 45%,#b8960c 100%);background-size:200% auto;color:#0a0a0f;padding:.55rem 1.8rem;border-radius:24px;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;box-shadow:0 0 18px rgba(212,175,55,0.5);transition:box-shadow .3s,transform .2s;animation:snavGoldPulse 3s ease-in-out infinite,snavGoldShift 4s linear infinite;}
+    .snav-webinar-btn::before{content:'';position:absolute;top:0;left:-130%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:snavGoldShimmer 3s ease-in-out infinite;}
+    .snav-webinar-btn:hover{box-shadow:0 0 32px rgba(212,175,55,0.9),0 0 60px rgba(212,175,55,0.3);transform:scale(1.07);color:#0a0a0f;}
+    @keyframes snavGoldPulse{0%,100%{box-shadow:0 0 18px rgba(212,175,55,0.5);}50%{box-shadow:0 0 30px rgba(212,175,55,1),0 0 50px rgba(212,175,55,0.4);}}
+    @keyframes snavGoldShift{0%{background-position:0% center;}100%{background-position:200% center;}}
+    @keyframes snavGoldShimmer{0%{left:-130%;}60%,100%{left:160%;}}
+    </style>
+    <nav class="snav" aria-label="Site navigation">
+        <a href="https://camussicamusica.github.io/automated-stalker/06_Presentation/webinar.html" target="_blank" class="snav-webinar-btn">&#127916; Webinar Website</a>
+    </nav>
 
     <!-- Aurora background -->
     <div class="aurora" aria-hidden="true">
