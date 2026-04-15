@@ -296,7 +296,7 @@
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
-            padding-top: 56px;
+            padding-top: 0;
             padding-bottom: 0;
         }
 
@@ -1760,8 +1760,8 @@
 
     <!-- ═══ SITE NAV ═══ -->
     <style>
-    .snav{position:fixed;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:space-between;padding:.75rem 2.5rem;background:rgba(13,22,38,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.06);z-index:9998;}
-    .snav-brand{font-family:'Barlow Condensed','Montserrat','Barlow',sans-serif;font-weight:900;font-size:1.15rem;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-decoration:none;white-space:nowrap;}
+    .snav{position:relative;width:100%;display:flex;align-items:center;justify-content:space-between;padding:calc(.75rem + 5px) 2.5rem .75rem;background:rgba(13,22,38,0.95);border-bottom:1px solid rgba(255,255,255,0.06);z-index:10;}
+    .snav-brand{font-family:'Montserrat','Barlow Condensed','Barlow',sans-serif;font-weight:900;font-size:1.15rem;letter-spacing:.14em;text-transform:uppercase;color:#fff;text-decoration:none;white-space:nowrap;}
     .snav-brand em{color:#D4AF37;font-style:normal;}
     .snav-center{position:absolute;left:50%;transform:translateX(-50%);}
     .snav-webinar-btn{position:relative;overflow:hidden;display:inline-block;background:linear-gradient(135deg,#D4AF37 0%,#FFE680 45%,#b8960c 100%);background-size:200% auto;color:#0a0a0f;padding:.5rem 1.6rem;border-radius:24px;font-family:'Barlow Condensed','Barlow',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;box-shadow:0 0 18px rgba(212,175,55,0.5);transition:box-shadow .3s,transform .2s;animation:snavGoldPulse 3s ease-in-out infinite,snavGoldShift 4s linear infinite;}
