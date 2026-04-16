@@ -1013,6 +1013,14 @@
             text-transform: uppercase;
         }
 
+        .ghl-form-wrapper {
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-glow);
+            background: rgba(60, 131, 246, 0.04);
+        }
+
         .seats-left {
             display: flex;
             align-items: center;
@@ -2615,13 +2623,25 @@
                 </p>
 
                 <div class="register-card glass fade-up">
-                    <div class="form-placeholder" aria-label="Registration form loading area">
-                        <p>[ GHL Form Embed ]</p>
+                    <div class="ghl-form-wrapper" aria-label="Registration form">
+                        <iframe
+                            src="https://api.leadconnectorhq.com/widget/form/wXjoxDFoRNgTNDJ1aom7"
+                            style="display:block;width:100%;height:963px;border:none;border-radius:8px;"
+                            id="inline-wXjoxDFoRNgTNDJ1aom7"
+                            data-layout="{'id':'INLINE'}"
+                            data-trigger-type="alwaysShow"
+                            data-trigger-value=""
+                            data-activation-type="alwaysActivated"
+                            data-activation-value=""
+                            data-deactivation-type="leadCollected"
+                            data-deactivation-value=""
+                            data-form-name="3-Day Webinar Registration"
+                            data-height="963"
+                            data-layout-iframe-id="inline-wXjoxDFoRNgTNDJ1aom7"
+                            data-form-id="wXjoxDFoRNgTNDJ1aom7"
+                            title="3-Day Webinar Registration"
+                        ></iframe>
                     </div>
-
-                    <a href="#register" class="btn" style="width: 100%; font-size: 1.35rem;" aria-label="Reserve my spot at the free workshop">
-                        RESERVE MY SPOT NOW <span class="btn-arrow" aria-hidden="true">→</span>
-                    </a>
 
                     <div class="seats-left" aria-live="polite" aria-label="47 spots remaining">
                         <svg class="fire-icon" aria-hidden="true" viewBox="0 0 14 14" fill="none">
@@ -2838,5 +2858,6 @@
     })();
     </script>
 
+    <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 </body>
 </html>
